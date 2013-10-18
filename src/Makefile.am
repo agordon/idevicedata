@@ -8,9 +8,12 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-bin_PROGRAMS = your_new_program
+bin_PROGRAMS = idevicedata_addressbook
 
-your_new_program_SOURCES = main.cpp
+idevicedata_addressbook_SOURCES = idd_addressbook.cpp
+
+AM_CPPFLAGS = $(SQLITE3_CFLAGS) $(libcrypto_CFLAGS)
+AM_LDFLAGS = $(SQLITE3_LDFLAGS) $(libcrypto_LIBS)
 
 ## Add the following if you need a boost
 # AM_CPPFLAGS = $(BOOST_CPPFLAGS)
