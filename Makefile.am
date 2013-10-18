@@ -11,7 +11,7 @@
 EXTRA_DIST = reconf configure \
 	$(top_srcdir)/.version
 
-SUBDIRS = m4 src
+SUBDIRS = m4 src tests
 ACLOCAL_AMFLAGS = -I m4
 
 BUILT_SOURCES = $(top_srcdir)/.version

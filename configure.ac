@@ -39,6 +39,8 @@ dnl === Enable this if you need a boost
 dnl BOOST_REQUIRE
 dnl BOOST_PROGRAM_OPTIONS
 
+AX_LIB_SQLITE3([])
+
 
 dnl --enable-wall
 EXTRA_CHECKS="-Wall -Wextra -Wformat-nonliteral -Wformat-security -Wswitch-default -Wswitch-enum -Wunused-parameter -Wfloat-equal -Werror"
@@ -61,6 +63,7 @@ AC_CONFIG_FILES([
    Makefile
    m4/Makefile
    src/Makefile
+   tests/Makefile
 ])
 
 AC_OUTPUT

@@ -1,4 +1,4 @@
-# Copyright (C) 2011 Assaf Gordon <gordon@cshl.edu>
+# Copyright (C) 2012 Assaf Gordon <gordon@cshl.edu>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -8,16 +8,10 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-# Install m4 macros in this directory
-m4datadir = $(datadir)/aclocal
+check_PROGRAMS = test_sqlite3_compilation
 
-# List your m4 macros here
-m4macros = ax_c_long_long.m4 \
-	   ax_cxx_header_stdcxx_tr1.m4 \
-	   ax_lib_sqlite3.m4 \
-	   boost.m4
+TESTS = $(check_PROGRAMS)
 
-# The following is boilerplate
-m4data_DATA = $(m4macros)
-EXTRA_DIST = $(m4data_DATA)
-
+test_sqlite3_compilation_SOURCES = test_sqlite3_compilation.cpp
+test_sqlite3_compilation_CFLAGS = $(SQLITE3_CFLAGS)
+test_sqlite3_compilation_LDFLAGS = $(SQLITE3_LDFLAGS)
