@@ -6,18 +6,10 @@
          (a library could should never terminate a program)
  */
 #include <err.h>
+#include "idd_common.h"
 #include "AddressBookDatabase.h"
 
 using namespace std;
-
-static string sqlite3_get_text_column(sqlite3_stmt* stmt,int column)
-{
-	const unsigned char* ch = sqlite3_column_text(stmt,column);
-
-	if (ch==NULL)
-		return "";
-	return (char*)ch;
-}
 
 ABPersonsVector load_ABPersons(sqlite3 *db)
 {
