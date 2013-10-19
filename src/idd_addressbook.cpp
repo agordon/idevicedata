@@ -17,19 +17,9 @@
 
 #include <openssl/sha.h>
 
+#include "AddressBookDatabase.h"
+
 using namespace std;
-
-class ABMultiValue
-{
-public:
-	size_t person_record_id; /* The row-id from ABPersons */
-	string label; /* Could be empty, JOIN'd from ABMultiValueLabel */
-	int property;
-	string value; /* Could be empty */
-
-	ABMultiValue() : person_record_id(0), property(0) { }
-};
-typedef vector<ABMultiValue> ABMultiValueVector;
 
 class ABAddress
 {
@@ -44,66 +34,6 @@ public:
 	string sub_locality;
 };
 typedef vector<ABAddress> ABAddressVector;
-
-class ABPerson
-{
-public:
-	size_t rowid;
-	string First;
-	string Last;
-	string Middle;
-	string Nickname;
-	string Prefix;
-	string Suffix;
-	string Organization;
-	string Department;
-	string Note;
-	string Birthday;
-	string JobTitle;
-	string DisplayName;
-
-	ABPerson() : rowid(0) { }
-
-	string GetName() const
-	{
-		string name;
-
-		if (!First.empty())
-			name = First;
-		if (!Middle.empty()) {
-			if (!name.empty())
-				name += " ";
-			name += Middle;
-		}
-		if (!Last.empty()) {
-			if (!name.empty())
-				name += " ";
-			name += Last;
-		}
-
-		/* If the name is still empty, try other fields */
-		if (name.empty() && !Organization.empty())
-			name = Organization;
-		if (name.empty() && !Department.empty())
-			name = Department;
-		if (name.empty() && !JobTitle.empty())
-			name = JobTitle;
-		if (name.empty() && !DisplayName.empty())
-			name = DisplayName;
-
-		/* Can this happen? */
-		if (name.empty()) {
-			cerr << "Warning: found ABPerson record without recognizable name (rowID = " << rowid << ")" << endl;
-			stringstream ss;
-			ss << "Uknown(RowID=" << rowid << ")";
-			name = ss.str();
-		}
-		return name;
-	}
-
-	ABMultiValueVector values;
-};
-typedef vector<ABPerson> ABPersonsVector;
 
 
 /* Global Variables */
@@ -242,133 +172,6 @@ string sqlite3_get_text_column(sqlite3_stmt* stmt,int column)
 	return (char*)ch;
 }
 
-ABPersonsVector load_ABPersons(sqlite3 *db)
-{
-	ABPersonsVector persons;
-	sqlite3_stmt *stmt=NULL;
-
-	int i = sqlite3_prepare_v2(db,
-"Select First,Last,Middle,Nickname,Prefix,Suffix," \
-"       Organization,Department,Note, "\
-"       Birthday,JobTitle,DisplayName,rowid from ABPerson"\
-"       Order by rowid",-1,&stmt,NULL);
-	if (i!=SQLITE_OK)
-		errx(1,"sqlite3_prepare_v2 failed: %s", sqlite3_errmsg(db));
-
-	/* Because SQLite3's ROW-ID starts with 1,
-	   insert a dummy person in index 0 */
-	ABPerson dummy;
-	persons.push_back(dummy);
-
-	while ( (i=sqlite3_step(stmt))==SQLITE_ROW ) {
-		ABPerson p;
-		p.First = sqlite3_get_text_column(stmt,0);
-		p.Last = sqlite3_get_text_column(stmt,1);
-		p.Middle = sqlite3_get_text_column(stmt,2);
-		p.Nickname = sqlite3_get_text_column(stmt,3);
-		p.Prefix = sqlite3_get_text_column(stmt,4);
-		p.Suffix = sqlite3_get_text_column(stmt,5);
-		p.Organization = sqlite3_get_text_column(stmt,6);
-		p.Department = sqlite3_get_text_column(stmt,7);
-		p.Note = sqlite3_get_text_column(stmt,8);
-		p.Birthday = sqlite3_get_text_column(stmt,9);
-		p.JobTitle = sqlite3_get_text_column(stmt,10);
-		p.DisplayName = sqlite3_get_text_column(stmt,11);
-		size_t rowid = p.rowid = (size_t)sqlite3_column_int(stmt,12);
-
-		persons.push_back(p);
-
-		/* Sanity Check:the index should be the same as row_id */
-		if (persons.size()<=rowid)
-			errx(1,"Internal error: ABPerson record rowid %zu is out of order (persons.size()==%zu)", rowid, persons.size());
-
-		if (persons.at(rowid).rowid != rowid)
-			errx(1,"Internal error: ABPerson record rowid %zu is out of order (persons.at(%zu).rowid=%zu)",rowid, rowid, persons.at(rowid).rowid);
-	}
-	if (i!=SQLITE_DONE)
-		errx(1,"sqlite3_step failed (code=%d=%s): %s",
-				i,sqlite3_errstr(i),sqlite3_errmsg(db));
-
-	i = sqlite3_finalize(stmt);
-	if (i!=SQLITE_OK)
-		errx(1,"sqlite3_finalize failed: %s", sqlite3_errmsg(db));
-
-	return persons;
-}
-
-ABMultiValueVector load_ABMultiValues(sqlite3 *db)
-{
-	ABMultiValueVector values;
-	sqlite3_stmt *stmt=NULL;
-
-	int i = sqlite3_prepare_v2(db,
-"select "\
-" record_id, property, ABMultiValueLabel.value, ABMultiValue.value " \
-"from ABMultiValue "\
-"left outer join ABMultiValueLabel " \
-"on ABMultiValue.label = ABMultiValueLabel.rowid " \
-"order by ABMultiValue.record_id",-1,&stmt,NULL);
-	if (i!=SQLITE_OK)
-		errx(1,"sqlite3_prepare_v2 failed: %s", sqlite3_errmsg(db));
-
-	while ( (i=sqlite3_step(stmt))==SQLITE_ROW ) {
-		ABMultiValue v;
-		v.person_record_id = (size_t)sqlite3_column_int(stmt,0);
-		v.property = (size_t)sqlite3_column_int(stmt,1);
-		v.label = sqlite3_get_text_column(stmt,2);
-		v.value = sqlite3_get_text_column(stmt,3);
-
-		values.push_back(v);
-	}
-	if (i!=SQLITE_DONE)
-		errx(1,"sqlite3_step failed (code=%d=%s): %s",
-				i,sqlite3_errstr(i),sqlite3_errmsg(db));
-
-	i = sqlite3_finalize(stmt);
-	if (i!=SQLITE_OK)
-		errx(1,"sqlite3_finalize failed: %s", sqlite3_errmsg(db));
-
-	return values;
-}
-
-ABMultiValueVector load_ABMultiValueEntry(sqlite3 *db)
-{
-	ABMultiValueVector values;
-	sqlite3_stmt *stmt=NULL;
-
-	int i = sqlite3_prepare_v2(db,
-"Select parent_id as person_id, ABMultiValueEntry.key as key, " \
-"ABMultiValueEntryKey.value as label, ABMultiValueEntryKey.value as value " \
-"from ABMultiValueEntry " \
-"Left outer join ABMultiValueEntryKey on " \
-"ABMultiValueEntry.key = ABMultiValueEntryKey.rowid " \
-"order by parent_id asc, key asc "
-,-1,&stmt,NULL);
-	if (i!=SQLITE_OK)
-		errx(1,"sqlite3_prepare_v2 failed: %s", sqlite3_errmsg(db));
-
-	while ( (i=sqlite3_step(stmt))==SQLITE_ROW ) {
-		ABMultiValue v;
-		v.person_record_id = (size_t)sqlite3_column_int(stmt,0);
-		v.property = (size_t)sqlite3_column_int(stmt,1);
-		v.label = sqlite3_get_text_column(stmt,2);
-		v.value = sqlite3_get_text_column(stmt,3);
-
-		values.push_back(v);
-	}
-	if (i!=SQLITE_DONE)
-		errx(1,"sqlite3_step failed (code=%d=%s): %s",
-				i,sqlite3_errstr(i),sqlite3_errmsg(db));
-
-	i = sqlite3_finalize(stmt);
-	if (i!=SQLITE_OK)
-		errx(1,"sqlite3_finalize failed: %s", sqlite3_errmsg(db));
-
-	return values;
-}
-
-
-
 int load_iOS_addressbook(const std::string& directory)
 {
 	int i;
@@ -386,7 +189,7 @@ int load_iOS_addressbook(const std::string& directory)
 
 	ABPersonsVector p = load_ABPersons(db);
 	ABMultiValueVector phone_emails = load_ABMultiValues(db);
-	ABMultiValueVector addresses = load_ABMultiValueEntry(db);
+	ABMultiValueEntryVector addresses = load_ABMultiValueEntry(db);
 
 	i = sqlite3_close(db);
 	if (i!=SQLITE_OK)

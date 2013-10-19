@@ -10,7 +10,8 @@
 
 bin_PROGRAMS = idevicedata_addressbook
 
-idevicedata_addressbook_SOURCES = idd_addressbook.cpp
+idevicedata_addressbook_SOURCES = idd_addressbook.cpp \
+				  AddressBookDatabase.h AddressBookDatabase.cpp
 
 AM_CPPFLAGS = $(SQLITE3_CFLAGS) $(libcrypto_CFLAGS)
 AM_LDFLAGS = $(SQLITE3_LDFLAGS) $(libcrypto_LIBS)
