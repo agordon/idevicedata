@@ -12,26 +12,11 @@
 
 #include <sqlite3.h>
 
-
 #include "idd_common.h"
 #include "AddressBookDatabase.h"
+#include "AddressBookMemory.h"
 
 using namespace std;
-
-class ABAddress
-{
-public:
-	size_t person_record_id;
-	string country;
-	string street;
-	string ZIP;
-	string city;
-	string country_code;
-	string state;
-	string sub_locality;
-};
-typedef vector<ABAddress> ABAddressVector;
-
 
 /* Global Variables */
 std::string program_name;
@@ -116,9 +101,11 @@ int load_iOS_addressbook(const std::string& directory)
 		errx(1,"sqlite3_open failed: %s", sqlite3_errmsg(db));
 	}
 
-	ABPersonsVector p = load_ABPersons(db);
-	ABMultiValueVector phone_emails = load_ABMultiValues(db);
-	ABMultiValueEntryVector addresses = load_ABMultiValueEntry(db);
+	ABPersonsVector db_persons = load_ABPersons(db);
+	ABMultiValueVector db_contacts = load_ABMultiValues(db);
+	ABMultiValueEntryVector db_addresses = load_ABMultiValueEntry(db);
+
+	PersonVector v = BuildPersonVector(db_persons,db_contacts,db_addresses);
 
 	i = sqlite3_close(db);
 	if (i!=SQLITE_OK)
