@@ -5,6 +5,7 @@
    TODO: remove "errx" calls, replace with returning error-codes.
          (a library could should never terminate a program)
  */
+#include <iostream>
 #include <err.h>
 #include "idd_common.h"
 #include "AddressBookDatabase.h"
@@ -73,11 +74,12 @@ ABMultiValueVector load_ABMultiValues(sqlite3 *db)
 	int i = sqlite3_prepare_v2(db,
 "select "\
 "UID, record_id, property, identifier,label as label_num,  " \
-"ABMultiValueLabel.value as label, ABMultiValue.value as value " \
+"ABMultiValueLabel.value as label, ABMultiValue.value as value, " \
+"ABMultiValue.rowid as rowid " \
 "from ABMultiValue "\
 "left outer join ABMultiValueLabel " \
 "on ABMultiValue.label = ABMultiValueLabel.rowid " \
-"order by ABMultiValue.record_id",-1,&stmt,NULL);
+"order by ABMultiValue.rowid",-1,&stmt,NULL);
 	if (i!=SQLITE_OK)
 		errx(1,"loadABMultiValues/sqlite3_prepare_v2 failed: %s", sqlite3_errmsg(db));
 
@@ -90,6 +92,7 @@ ABMultiValueVector load_ABMultiValues(sqlite3 *db)
 		v.label_num = (size_t)sqlite3_column_int(stmt,4);
 		v.label = sqlite3_get_text_column(stmt,5);
 		v.value = sqlite3_get_text_column(stmt,6);
+		v.rowid = sqlite3_column_int(stmt,7);
 
 		/* NOTE: this is memory-wasteful, as the UIDs in the table
 		   are not sequencial (there are gaps for deleted entries).

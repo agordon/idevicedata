@@ -11,6 +11,7 @@
 class ABMultiValue
 {
 public:
+	size_t rowid; /* in ABMultiValue table */
 	size_t uid; /* The ID of this record, used witht the address's parent field */
 	size_t person_record_id; /* The row-id from ABPersons */
 	int property;
@@ -51,6 +52,17 @@ public:
 	std::string value;
 
 	ABMultiValueEntry() : parent_id(0), key_num(0) { }
+
+	bool empty() const
+	{
+		return parent_id==0
+			&&
+			key_num==0
+			&&
+			key.empty()
+			&&
+			value.empty();
+	}
 };
 typedef std::vector<ABMultiValueEntry> ABMultiValueEntryVector;
 

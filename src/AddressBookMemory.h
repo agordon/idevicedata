@@ -15,11 +15,13 @@
 class ContactInfo
 {
 public:
+	size_t label_num;
 	std::string label;
 	std::string value;
 
 	/* Technical Info */
-	size_t record_id;
+	size_t rowid; /* in ABMultiValue table */
+	size_t uid;   /* in ABMultiValue table */
 };
 typedef std::vector<ContactInfo> ContactInfoVector;
 
@@ -56,7 +58,12 @@ public:
 	ContactInfoVector contacts;
 	AddressVector addresses;
 
+	/* Technical Information */
+	size_t rowid; /* from ABPerson table */
+
 	Person() {}
+
+	std::string GetName() const;
 };
 typedef std::vector<Person> PersonVector;
 
