@@ -107,6 +107,10 @@ int load_iOS_addressbook(const std::string& directory)
 
 	PersonVector v = BuildPersonVector(db_persons,db_contacts,db_addresses);
 
+	/* DEBUG */
+	for (size_t j=0;j<v.size();j++)
+		cout << v[j];
+
 	i = sqlite3_close(db);
 	if (i!=SQLITE_OK)
 		errx(1,"sqlite3_close failed: %s", sqlite3_errmsg(db));

@@ -53,7 +53,7 @@ string Person::GetName() const
 
 PersonVector BuildPersonVector(const ABPersonsVector & db_person,
 				const ABMultiValueVector & db_contacts,
-				const ABMultiValueEntryVector & /*db_addresses*/)
+				const ABMultiValueEntryVector & db_addresses)
 {
 	size_t i;
 	PersonVector db;
@@ -112,8 +112,88 @@ PersonVector BuildPersonVector(const ABPersonsVector & db_person,
 				"[db.size()=%zu]",
 				mv.rowid, mv.uid,person_index,db.size());
 
+		/* This record has no direct value -
+		   it is used as a ForigenKey with ABMultiValueEnty:
+		   The ABMultiValueEntry points to this record,
+		   and this record points to the Person's record. */
+		if (ci.value.empty())
+			continue;
+
 		Person &p = db.at(person_index);
 		p.contacts.push_back(ci);
+	}
+
+	/* Collate Address Information into objects */
+	AddressVector addrs;
+	for (i=0;i<db_addresses.size();++i) {
+		const ABMultiValueEntry &mve = db_addresses.at(i);
+		size_t parent_id = mve.parent_id;
+
+		if (parent_id >= db_contacts.size())
+			errx(1,"Internal error: BuildPersonVector: "\
+				"ABMultiValueEntry.parent_id(%zu) points "\
+				"to non-existing ABMultiValue record",
+				parent_id);
+		const ABMultiValue &mv = db_contacts.at(parent_id);
+		if (mv.empty())
+			errx(1,"Internal error: BuildPersonVector: "\
+				"ABMultiValueEntry.parent_id(%zu) points "\
+				"to an empty ABMultiValue record",
+				parent_id);
+
+		if (addrs.size() <= parent_id)
+			addrs.resize(parent_id+1);
+
+		Address& ad = addrs.at(parent_id);
+		ad.parent_id = parent_id;
+		ad.person_record_id = mv.person_record_id;
+		ad.type = mv.label;
+
+		/* From ABMultiValueEntryKey Table */
+		switch (mve.key_num)
+		{
+		case 1:
+			ad.country = mve.value;
+			break;
+		case 2:
+			ad.street = mve.value;
+			break;
+		case 3:
+			ad.ZIP = mve.value;
+			break;
+		case 4:
+			ad.city = mve.value;
+			break;
+		case 5:
+			ad.country_code = mve.value;
+			break;
+		case 6:
+			ad.state = mve.value;
+			break;
+		case 7:
+			ad.sub_locality = mve.value;
+			break;
+		default:
+			/* This should not happen */
+			errx(1,"Internal Error: BuildPersonVector(): " \
+				"Found unknown ABMultiValueEntryKey " \
+				"(value = %zu , name = '%s')",
+				mve.key_num,mve.key.c_str());
+			break;
+
+		}
+	}
+
+	/* Combine Addresses into persons */
+	for (i=0;i<addrs.size();++i) {
+		const Address &ad = addrs.at(i);
+		if (ad.empty())
+			continue;
+
+		size_t person_id = ad.person_record_id;
+
+		Person &p = db.at(person_id);
+		p.addresses.push_back(ad);
 	}
 	return db;
 }

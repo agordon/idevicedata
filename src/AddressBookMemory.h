@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <ostream>
 
 #include "AddressBookDatabase.h"
 
@@ -25,6 +26,17 @@ public:
 };
 typedef std::vector<ContactInfo> ContactInfoVector;
 
+inline std::ostream& operator <<(std::ostream& stream, const ContactInfo& i)
+{
+	stream << "ContactInfo(label='" << i.label
+		<< "', value='" << i.value
+		<< "', uid=" << i.uid
+		<< ", rowid=" << i.rowid
+		<< ")" << std::endl;
+	return stream;
+}
+
+
 /* Physical Address of a Person */
 class Address
 {
@@ -36,8 +48,45 @@ public:
 	std::string country_code;
 	std::string state;
 	std::string sub_locality;
+	std::string type; /* Home, Work, Other */
+
+	/* Technical Info */
+	size_t parent_id; /* ForeignKey into ABMultiValue */
+	size_t person_record_id; /* ForiegnKey into ABPerson */
+
+	bool empty() const
+	{
+		return country.empty()
+			&&
+			street.empty()
+			&&
+			ZIP.empty()
+			&&
+			city.empty()
+			&&
+			country_code.empty()
+			&&
+			state.empty()
+			&&
+			sub_locality.empty();
+	}
 };
 typedef std::vector<Address> AddressVector;
+
+inline std::ostream& operator <<(std::ostream& stream, const Address& a)
+{
+	stream << "Address(type='" << a.type << "'):" << std::endl
+		<< "  Street='" << a.street << std::endl
+		<< "  city='" << a.city << std::endl
+		<< "  zip=" << a.ZIP << std::endl
+		<< "  country=" << a.country << std::endl
+		<< "  country_code=" << a.country_code << std::endl
+		<< "  sub_locality=" << a.sub_locality << std::endl
+		<< "  parent_id=" << a.parent_id << std::endl
+		<< "  person_id=" << a.person_record_id << std::endl;
+	return stream;
+}
+
 
 class Person
 {
@@ -66,6 +115,28 @@ public:
 	std::string GetName() const;
 };
 typedef std::vector<Person> PersonVector;
+
+inline std::ostream& operator <<(std::ostream& stream, const Person& p)
+{
+	stream << "Person (" << p.GetName() << "):" << std::endl
+		<< "   First: '" << p.First << "'" << std::endl
+		<< "   Middle: '" << p.Middle << "'" << std::endl
+		<< "   Last: '" << p.Last << "'" << std::endl
+		<< "   Nickname: '" << p.Nickname << "'" << std::endl
+		<< "   Prefix: '" << p.Prefix << "'" << std::endl
+		<< "   Suffix: '" << p.Suffix << "'" << std::endl
+		<< "   Organization: '" << p.Organization << "'" << std::endl
+		<< "   Deparetment: '" << p.Department << "'" << std::endl
+		<< "   Birthday: '" << p.Birthday << "'" << std::endl
+		<< "   JobTitle: '" << p.JobTitle << "'" << std::endl
+		<< "   DisplayName: '" << p.DisplayName << "'" << std::endl
+		<< "   Note: '" << p.Note << "'" << std::endl;
+	for (size_t i=0;i<p.contacts.size();++i)
+		stream << p.contacts.at(i);
+	for (size_t i=0;i<p.addresses.size();++i)
+		stream << p.addresses.at(i);
+	return stream;
+}
 
 PersonVector BuildPersonVector(const ABPersonsVector &db_person,
 				const ABMultiValueVector &db_contacts,
