@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 
 #include <err.h>
 
@@ -12,7 +13,37 @@
 
 using namespace std;
 
+class PersonSorter
+{
+public:
+	bool operator() (const Person& p1, const Person& p2) const
+	{
+		return p1.GetSortKey() < p2.GetSortKey();
+	}
+};
 
+const std::string& Person::GetSortKey() const
+{
+	if (!Last.empty())
+		return Last;
+	if (!First.empty())
+		return First;
+	if (!Middle.empty())
+		return Middle;
+
+	/* If the name is still empty, try other fields */
+	if (!Organization.empty())
+		return Organization;
+	if (!Department.empty())
+		return Department;
+	if (!JobTitle.empty())
+		return JobTitle;
+	if (!DisplayName.empty())
+		return DisplayName;
+
+	/* Can this happen? */
+	return Last;
+}
 
 string Person::GetName() const
 {
@@ -195,5 +226,7 @@ PersonVector BuildPersonVector(const ABPersonsVector & db_person,
 		Person &p = db.at(person_id);
 		p.addresses.push_back(ad);
 	}
+
+	sort(db.begin(),db.end(),PersonSorter());
 	return db;
 }

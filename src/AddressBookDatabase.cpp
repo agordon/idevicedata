@@ -94,6 +94,16 @@ ABMultiValueVector load_ABMultiValues(sqlite3 *db)
 		v.value = sqlite3_get_text_column(stmt,6);
 		v.rowid = sqlite3_column_int(stmt,7);
 
+		/* Remove Magic Markers from labels */
+		size_t pos = v.label.find("_$!<");
+		if (pos != string::npos)
+			v.label.erase(pos,4);
+		pos = v.label.find(">!$_");
+		if (pos != string::npos)
+			v.label.erase(pos,4);
+		if (v.label.empty())
+			v.label = "Other";
+
 		/* NOTE: this is memory-wasteful, as the UIDs in the table
 		   are not sequencial (there are gaps for deleted entries).
 		   But it will make searching very quick */

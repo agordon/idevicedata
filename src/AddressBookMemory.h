@@ -113,6 +113,7 @@ public:
 	Person() {}
 
 	std::string GetName() const;
+	const std::string& GetSortKey() const;
 	std::string GetEmail() const;
 	std::string GetPhone() const;
 };
