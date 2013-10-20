@@ -117,8 +117,18 @@ public:
 
 	std::string GetName() const;
 	const std::string& GetSortKey() const;
-	std::string GetEmail() const;
-	std::string GetPhone() const;
+	std::string GetEmail() const
+	{
+		if (!emails.empty())
+			return emails[0].value;
+		return "";
+	}
+	std::string GetPhone() const
+	{
+		if (!phones.empty())
+			return phones[0].value;
+		return "";
+	}
 };
 typedef std::vector<Person> PersonVector;
 

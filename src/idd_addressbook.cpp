@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
+#include <climits>
 
 #include <err.h>
 #include <getopt.h>
@@ -15,6 +16,7 @@
 #include "idd_common.h"
 #include "AddressBook.h"
 #include "AddressBookExportHTML.h"
+#include "AddressBookExportSummary.h"
 
 using namespace std;
 
@@ -22,9 +24,25 @@ using namespace std;
 std::string program_name;
 std::string backup_directory;
 
+enum
+{
+	OPTION_EXPORT_SUMMARY = CHAR_MAX+1,
+	OPTION_EXPORT_HTML_IOS
+};
+
+enum EXPORT_TYPE
+{
+	EXPORT_SUMMARY=1, /* A Tabulated summary: name, phone, email */
+	EXPORT_HTML_IOS, /* Single-page HTML file, with iOS6-like style */
+};
+
+EXPORT_TYPE export_type = EXPORT_SUMMARY;
+
 /* Command line options */
 const struct option mbdb_options[] = {
 	{"help",	no_argument,	0,	'h'},
+	{"summary",	no_argument,	0,	OPTION_EXPORT_SUMMARY},
+	{"html",	no_argument,	0,	OPTION_EXPORT_HTML_IOS},
 	{0,		0,		0,	0}
 };
 
@@ -54,9 +72,12 @@ void show_help()
 "\n" \
 "Required Parameters:\n" \
 "  DIR  - The backup directory\n" \
+"         (created with idevicebackup2)\n"\
 "\n" \
 "Options:\n" \
-"  --help   -  Show this help screen.\n" \
+"  --help    -  Show this help screen.\n" \
+"  --html    -  Export an HTML file, iOS6 style.\n" \
+"  --summary -  Export a short summary: name,phone,email.\n" \
 "\n"
 	;
 }
@@ -72,6 +93,12 @@ void parse_command_line(int argc, char* argv[])
 		case 'h':
 			show_help();
 			exit(0);
+			break;
+		case OPTION_EXPORT_SUMMARY:
+			export_type = EXPORT_SUMMARY;
+			break;
+		case OPTION_EXPORT_HTML_IOS:
+			export_type = EXPORT_HTML_IOS;
 			break;
 		default:
 			break;
@@ -92,9 +119,21 @@ int main(int argc, char* argv[])
 
 	AddressBook ab = LoadAddressBookDirectory(backup_directory);
 
-	string html = AddressBookExportHTML(ab);
+	string output;
 
-	cout << html << endl;
+	switch (export_type)
+	{
+	default:
+	case EXPORT_SUMMARY:
+		output = AddressBookExportSummary(ab);
+		break;
+
+	case EXPORT_HTML_IOS:
+		output = AddressBookExportHTML(ab);
+		break;
+	}
+
+	cout << output << endl;
 
 	return 0;
 }

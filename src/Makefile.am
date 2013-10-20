@@ -15,6 +15,7 @@ idevicedata_addressbook_SOURCES = idd_addressbook.cpp \
 				  AddressBookMemory.h AddressBookMemory.cpp \
 				  AddressBook.h AddressBook.cpp \
 				  AddressBookExportHTML.h AddressBookExportHTML.cpp \
+				  AddressBookExportSummary.h AddressBookExportSummary.cpp \
 				  idd_common.cpp idd_common.h
 
 AM_CPPFLAGS = $(SQLITE3_CFLAGS) $(libcrypto_CFLAGS)
