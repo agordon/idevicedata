@@ -113,6 +113,8 @@ public:
 	Person() {}
 
 	std::string GetName() const;
+	std::string GetEmail() const;
+	std::string GetPhone() const;
 };
 typedef std::vector<Person> PersonVector;
 
