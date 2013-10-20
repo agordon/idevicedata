@@ -104,7 +104,10 @@ public:
 	std::string JobTitle;
 	std::string DisplayName;
 
-	ContactInfoVector contacts;
+	ContactInfoVector emails;
+	ContactInfoVector phones;
+	ContactInfoVector others; /* HomePage URL and OTHER */
+
 	AddressVector addresses;
 
 	/* Technical Information */
@@ -134,8 +137,12 @@ inline std::ostream& operator <<(std::ostream& stream, const Person& p)
 		<< "   JobTitle: '" << p.JobTitle << "'" << std::endl
 		<< "   DisplayName: '" << p.DisplayName << "'" << std::endl
 		<< "   Note: '" << p.Note << "'" << std::endl;
-	for (size_t i=0;i<p.contacts.size();++i)
-		stream << p.contacts.at(i);
+	for (size_t i=0;i<p.phones.size();++i)
+		stream << p.phones.at(i);
+	for (size_t i=0;i<p.emails.size();++i)
+		stream << p.emails.at(i);
+	for (size_t i=0;i<p.others.size();++i)
+		stream << p.others.at(i);
 	for (size_t i=0;i<p.addresses.size();++i)
 		stream << p.addresses.at(i);
 	return stream;

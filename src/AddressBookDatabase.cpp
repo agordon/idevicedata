@@ -5,12 +5,26 @@
    TODO: remove "errx" calls, replace with returning error-codes.
          (a library could should never terminate a program)
  */
+#include <algorithm>
 #include <iostream>
 #include <err.h>
 #include "idd_common.h"
 #include "AddressBookDatabase.h"
 
 using namespace std;
+
+/* Returns TRUE if the string LOOKS like a valid email.
+   Email validation is quite complicationed
+   (depending on which RFC you follow, and allow international, non-ASCII
+    characters in the server name).
+   So let's just check for the basics. */
+static bool string_is_email(const std::string &str)
+{
+	size_t at_count = count(str.begin(),str.end(),'@');
+	size_t dot_count = count(str.begin(),str.end(),'.');
+
+	return (at_count==1 && dot_count >=1);
+}
 
 ABPersonsVector load_ABPersons(sqlite3 *db)
 {
@@ -101,8 +115,12 @@ ABMultiValueVector load_ABMultiValues(sqlite3 *db)
 		pos = v.label.find(">!$_");
 		if (pos != string::npos)
 			v.label.erase(pos,4);
-		if (v.label.empty())
-			v.label = "Other";
+		if (v.label.empty()) {
+			if (string_is_email(v.value))
+				v.label = "Email";
+			else
+				v.label = "Other";
+		}
 
 		/* NOTE: this is memory-wasteful, as the UIDs in the table
 		   are not sequencial (there are gaps for deleted entries).

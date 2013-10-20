@@ -203,10 +203,46 @@ std::string AddressBookExportHTML(const AddressBook & ab )
 			<< "</div>\n" /* end of "contact_header" div */
 			;
 
-		/* One-liner contact information (email,mobile,URL) */
+		/* One-liner contact information (Phones) */
 		ss << "<div class=\"contact_info_separator\"></div>\n" ;
-		for (size_t i=0;i<p.contacts.size();++i) {
-			const ContactInfo& ci = p.contacts.at(i);
+		for (size_t i=0;i<p.phones.size();++i) {
+			const ContactInfo& ci = p.phones.at(i);
+
+			if (ci.value.empty())
+				continue;
+
+			ss << "<div class=\"contact_oneline_info\">\n"
+				<< "<div class=\"contact_oneline_label\">"
+				<< htmlize(ci.label)
+				<< "</div>\n"
+				<< "<div class=\"contact_oneline_value\">"
+				<< htmlize(ci.value)
+				<< "</div>\n"
+				<< "</div>\n\n";
+		}
+
+		/* One-liner contact information (Emails) */
+		ss << "<div class=\"contact_info_separator\"></div>\n" ;
+		for (size_t i=0;i<p.emails.size();++i) {
+			const ContactInfo& ci = p.emails.at(i);
+
+			if (ci.value.empty())
+				continue;
+
+			ss << "<div class=\"contact_oneline_info\">\n"
+				<< "<div class=\"contact_oneline_label\">"
+				<< htmlize(ci.label)
+				<< "</div>\n"
+				<< "<div class=\"contact_oneline_value\">"
+				<< htmlize(ci.value)
+				<< "</div>\n"
+				<< "</div>\n\n";
+		}
+
+		/* One-liner contact information (HomePage + Other) */
+		ss << "<div class=\"contact_info_separator\"></div>\n" ;
+		for (size_t i=0;i<p.others.size();++i) {
+			const ContactInfo& ci = p.others.at(i);
 
 			if (ci.value.empty())
 				continue;

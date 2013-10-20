@@ -151,7 +151,24 @@ PersonVector BuildPersonVector(const ABPersonsVector & db_person,
 			continue;
 
 		Person &p = db.at(person_index);
-		p.contacts.push_back(ci);
+		
+		/* Hard-coded options, based on ABMultiValueLabel table */
+		if (ci.label == "Mobile"
+		    ||
+		    ci.label == "Home"
+		    ||
+		    ci.label == "Work"
+		    ||
+		    ci.label == "iPhone"
+		    ||
+		    ci.label == "WorkFAX"
+		    ||
+		    ci.label == "HomeFAX")
+			p.phones.push_back(ci);
+		else if (ci.label == "Email")
+			p.emails.push_back(ci);
+		else
+			p.others.push_back(ci);
 	}
 
 	/* Collate Address Information into objects */
