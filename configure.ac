@@ -41,6 +41,8 @@ dnl BOOST_PROGRAM_OPTIONS
 
 AX_LIB_SQLITE3([])
 
+PKG_CHECK_MODULES(libcrypto, libcrypto >= 1.0)
+PKG_CHECK_MODULES(libcrippy, libcrippy-1.0 >= 1.0)
 
 dnl --enable-wall
 EXTRA_CHECKS="-Wall -Wextra -Wformat-nonliteral -Wformat-security -Wswitch-default -Wswitch-enum -Wunused-parameter -Wfloat-equal -Werror"
