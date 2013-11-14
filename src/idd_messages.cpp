@@ -17,6 +17,8 @@
 
 #include "MessagesChatRecord.h"
 #include "MessagesChatRecordLoader.h"
+#include "MessagesHandleRecord.h"
+#include "MessagesHandleRecordLoader.h"
 
 using namespace std;
 
@@ -96,10 +98,13 @@ int main(int argc, char* argv[])
 	sqlite3 *db = open_iOS_database(backup_directory,
 					"HomeDomain",
 					"Library/SMS/sms.db");
-	chatRecords a;
-	a = LoadchatRecords(db);
-	cout << a;
+//	chatRecords a;
+//	a = LoadchatRecords(db);
+//	cout << a;
 
-	sqlite3_close(db);
+	handleRecords h = LoadhandleRecords(db);
+	cout << h;
+
+	close_iOS_database(&db);
 	return 0;
 }
