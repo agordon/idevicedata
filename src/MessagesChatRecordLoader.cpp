@@ -39,22 +39,22 @@ chatRecords LoadchatRecords(sqlite3 *db)
 
 	while ( (i=sqlite3_step(stmt))==SQLITE_ROW ) {
 		chatRecord p;
-		p._row_id = (size_t)sqlite3_column_int(stmt,1);
-		p.ROWID = sqlite3_column_int(stmt,2);
-		p.guid = sqlite3_get_text_column(stmt,3);
-		p.style = sqlite3_column_int(stmt,4);
-		p.state = sqlite3_column_int(stmt,5);
-		p.account_id = sqlite3_get_text_column(stmt,6);
-		const void* ptr = sqlite3_column_blob(stmt,7);
-		size_t blob_size = sqlite3_column_bytes(stmt,7);
+		p._row_id = (size_t)sqlite3_column_int(stmt,0);
+		p.ROWID = sqlite3_column_int(stmt,1);
+		p.guid = sqlite3_get_text_column(stmt,2);
+		p.style = sqlite3_column_int(stmt,3);
+		p.state = sqlite3_column_int(stmt,4);
+		p.account_id = sqlite3_get_text_column(stmt,5);
+		const void* ptr = sqlite3_column_blob(stmt,6);
+		size_t blob_size = sqlite3_column_bytes(stmt,6);
 		p.properties.resize(blob_size);
 		memcpy(p.properties.data(),ptr,blob_size);
-		p.chat_identifier = sqlite3_get_text_column(stmt,8);
-		p.service_name = sqlite3_get_text_column(stmt,9);
-		p.room_name = sqlite3_get_text_column(stmt,10);
-		p.account_login = sqlite3_get_text_column(stmt,11);
-		p.is_archived = sqlite3_column_int(stmt,12);
-		p.last_addressed_handle = sqlite3_get_text_column(stmt,13);
+		p.chat_identifier = sqlite3_get_text_column(stmt,7);
+		p.service_name = sqlite3_get_text_column(stmt,8);
+		p.room_name = sqlite3_get_text_column(stmt,9);
+		p.account_login = sqlite3_get_text_column(stmt,10);
+		p.is_archived = sqlite3_column_int(stmt,11);
+		p.last_addressed_handle = sqlite3_get_text_column(stmt,12);
 
 		data.insert(pair<size_t,chatRecord>(p._row_id,p));
 	}
