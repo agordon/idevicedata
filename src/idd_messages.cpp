@@ -15,6 +15,9 @@
 
 #include "idd_common.h"
 
+#include "MessagesChatRecord.h"
+#include "MessagesChatRecordLoader.h"
+
 using namespace std;
 
 /* Global Variables */
@@ -90,5 +93,13 @@ int main(int argc, char* argv[])
 {
 	parse_command_line(argc,argv);
 
+	sqlite3 *db = open_iOS_database(backup_directory,
+					"HomeDomain",
+					"Library/SMS/sms.db");
+	chatRecords a;
+	a = LoadchatRecords(db);
+	cout << a;
+
+	sqlite3_close(db);
 	return 0;
 }

@@ -20,6 +20,8 @@ idevicedata_addressbook_SOURCES = idd_addressbook.cpp \
 				  idd_common.cpp idd_common.h
 
 idevicedata_messages_SOURCES = idd_messages.cpp \
+			       MessagesChatRecord.h \
+			       MessagesChatRecordLoader.h MessagesChatRecordLoader.cpp \
 			       idd_common.cpp idd_common.h
 
 AM_CPPFLAGS = $(SQLITE3_CFLAGS) $(libcrypto_CFLAGS)
