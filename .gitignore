@@ -23,9 +23,11 @@ config.status
 configure
 libtool
 
+
 */.deps/*
 
 config/compile
+config/test-driver
 config/config.guess
 config/config.sub
 config/depcomp
@@ -42,8 +44,9 @@ stamp-h1
 *.o
 
 
-## TODO: change this to the name of your binary program
-src/your_new_program
+src/idevicedata_addressbook
+src/idevicedata_messages
+
 
 ## TODO: change this to the name of your unit-test programs
 tests/test
