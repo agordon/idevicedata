@@ -23,12 +23,20 @@
 using namespace std;
 
 /* Global Variables */
+bool dump_chats = false;
+bool dump_handles = false;
 std::string program_name;
 std::string backup_directory;
 
 /* Command line options */
+enum {
+	OPTION_DUMP_CHATS = CHAR_MAX+1,
+	OPTION_DUMP_HANDLES,
+};
 const struct option mbdb_options[] = {
 	{"help",	no_argument,	0,	'h'},
+	{"dump-chats",  no_argument,	0,	OPTION_DUMP_CHATS},
+	{"dump-handles",no_argument,	0,	OPTION_DUMP_HANDLES},
 	{0,		0,		0,	0}
 };
 
@@ -62,6 +70,8 @@ void show_help()
 "\n" \
 "Options:\n" \
 "  --help    -  Show this help screen.\n" \
+"  --dump-chats - (debug) dump 'chat' table\n" \
+"  --dump-handles - (debug) dump 'handle' table\n" \
 "\n"
 	;
 }
@@ -77,6 +87,12 @@ void parse_command_line(int argc, char* argv[])
 		case 'h':
 			show_help();
 			exit(0);
+			break;
+		case OPTION_DUMP_CHATS:
+			dump_chats = true;
+			break;
+		case OPTION_DUMP_HANDLES:
+			dump_handles = true;
 			break;
 		default:
 			break;
@@ -98,12 +114,16 @@ int main(int argc, char* argv[])
 	sqlite3 *db = open_iOS_database(backup_directory,
 					"HomeDomain",
 					"Library/SMS/sms.db");
-//	chatRecords a;
-//	a = LoadchatRecords(db);
-//	cout << a;
+	if (dump_chats) {
+		chatRecords a;
+		a = LoadchatRecords(db);
+		cout << a;
+	}
 
-	handleRecords h = LoadhandleRecords(db);
-	cout << h;
+	if (dump_handles) {
+		handleRecords h = LoadhandleRecords(db);
+		cout << h;
+	}
 
 	close_iOS_database(&db);
 	return 0;
