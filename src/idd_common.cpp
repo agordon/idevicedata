@@ -114,3 +114,16 @@ sqlite3* open_iOS_database(const std::string &directory,
 
 	return db;
 }
+
+void close_iOS_database(sqlite3 **db)
+{
+	if (db == NULL)
+		return ;
+	if (*db == NULL)
+		return ;
+
+	int i = sqlite3_close(*db);
+	if (i!=SQLITE_OK)
+		errx(1,"sqlite3_close failed: %s", sqlite3_errmsg(*db));
+	*db = NULL ;
+}

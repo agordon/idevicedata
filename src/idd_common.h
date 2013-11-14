@@ -23,6 +23,11 @@ sqlite3* open_iOS_database(const std::string &directory,
 			   const std::string &domain,
 			   const std::string &db_file_name);
 
+/* Closes the iOS sqlite3 database.
+   Terminates program on any error.
+   Sets *db to point to NULL. */
+void close_iOS_database(sqlite3 **db);
+
 std::string sqlite3_get_text_column(sqlite3_stmt* stmt,int column);
 
 /* Given a domain (e.g. "CameraRollDomain")
