@@ -11,6 +11,7 @@
 #include <cstddef>
 #include <cstring>
 #include <cstdlib>
+#include <string>
 
 #include <err.h>
 #include <stdio.h>
@@ -83,3 +84,33 @@ std::string sha1_iOS_file(const std::string& domain, const std::string& file)
 	return sha1hex(domain + "-" + file);
 }
 
+sqlite3* open_iOS_database(const std::string &directory,
+			   const std::string &domain,
+			   const std::string &db_file_name)
+{
+	int i;
+	sqlite3 *db=NULL;
+	std::string hashed_db_file = directory + "/" +
+		sha1_iOS_file(domain,db_file_name);
+
+	if (!is_valid_directory(directory.c_str()))
+		errx(1,"Can't open database, backup directory (%s) is not a valid directory", directory.c_str());
+
+	if (!is_valid_regular_file(hashed_db_file.c_str()))
+		errx(1,"Can't open database (Domain = '%s', File = '%s'), " \
+			"hashed	file does not exist (%s)",
+			domain.c_str(), db_file_name.c_str(),
+			hashed_db_file.c_str());
+
+	i = sqlite3_open_v2(hashed_db_file.c_str(),&db,
+			SQLITE_OPEN_READONLY,NULL);
+	if (i!=SQLITE_OK) {
+		if (db==NULL)
+			errx(1,"sqlite3_open(%s) failed, memory error",
+				hashed_db_file.c_str());
+		errx(1,"sqlite3_open(%s) failed: %s",
+				hashed_db_file.c_str(), sqlite3_errmsg(db));
+	}
+
+	return db;
+}

@@ -7,6 +7,22 @@
 #include <string>
 #include <sqlite3.h>
 
+/* Opens an iOS sqlite3 database file.
+   Input:
+     directory: the iOS backup directory.
+     domain: the iOS domain (e.g "HomeDomain")
+     db_file_name: ASCII filename of the database (e.g ""Library/AddressBook/AddressBook.sqlitedb")
+
+    Output:
+     A pointer to a VALID sqlite3 opened database.
+
+    If opening fails, the function terminates the application.
+    (no NULL or error values are returned).
+*/
+sqlite3* open_iOS_database(const std::string &directory,
+			   const std::string &domain,
+			   const std::string &db_file_name);
+
 std::string sqlite3_get_text_column(sqlite3_stmt* stmt,int column);
 
 /* Given a domain (e.g. "CameraRollDomain")
