@@ -7,8 +7,10 @@
 #include "MessagesChatRecord.h"
 
 #include <unordered_map>
+#include <algorithm>
 #include <ostream>
 #include <sqlite3.h>
+#include <vector>
 
 typedef std::unordered_map<int,chatRecord> chatRecords;
 
@@ -17,10 +19,18 @@ typedef std::unordered_map<int,chatRecord> chatRecords;
 inline std::ostream& operator <<(std::ostream& strm, const chatRecords& r)
 {
 	strm << "chat table content =" << std::endl;
-	for (auto i = r.begin(); i != r.end(); ++i) {
-		strm << "-- record " << i->first << " --" << std::endl;
-		strm << i->second;
-		strm << "-- end record " << i->first << " -- " << std::endl;
+	std::vector<chatRecords::key_type> keys;
+	keys.reserve(r.size());
+	for (auto i = r.begin(); i != r.end(); ++i)
+		keys.push_back(i->first);
+	std::sort(keys.begin(),keys.end());
+
+	for (size_t i=0;i<keys.size();++i) {
+		auto key = keys[i];
+		auto v = r.find(key);
+		strm << "-- record " << key << " --" << std::endl;
+		strm << v->second;
+		strm << "-- end record " << key << " -- " << std::endl;
 	}
 	return strm;
 }

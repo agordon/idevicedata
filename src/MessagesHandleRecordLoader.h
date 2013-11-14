@@ -14,12 +14,20 @@ typedef std::unordered_map<int,handleRecord> handleRecords;
 inline std::ostream& operator <<(std::ostream& strm, const handleRecords& r)
 {
         strm << "handle table content =" << std::endl;
-        for (auto i = r.begin(); i != r.end(); ++i) {
-                strm << "-- record " << i->first << " --" << std::endl;
-                strm << i->second;
-                strm << "-- end record " << i->first << " -- " << std::endl;
-        }
-        return strm;
+	std::vector<handleRecords::key_type> keys;
+	keys.reserve(r.size());
+	for (auto i = r.begin(); i != r.end(); ++i)
+		keys.push_back(i->first);
+	std::sort(keys.begin(),keys.end());
+
+	for (size_t i=0;i<keys.size();++i) {
+		auto key = keys[i];
+		auto v = r.find(key);
+		strm << "-- record " << key << " --" << std::endl;
+		strm << v->second;
+		strm << "-- end record " << key << " -- " << std::endl;
+	}
+	return strm;
 }
 
 handleRecords LoadhandleRecords(sqlite3 *db);
