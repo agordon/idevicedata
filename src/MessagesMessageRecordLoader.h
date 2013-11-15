@@ -33,7 +33,18 @@ inline std::ostream& operator <<(std::ostream& strm, const messageRecords& r)
         return strm;
 }
 
-messageRecords LoadmessageRecords(sqlite3 *db);
+/* Loads ALL messages from the 'message' table -
+   Might require a lot of memory (depending on number of
+   messages) and take some time */
+messageRecords LoadAllMessageRecords(sqlite3 *db);
+
+/* Loads the last message of every chat */
+messageRecords LoadLastMessageRecords(sqlite3 *db);
+
+/* Loads All the messages of a specific chat */
+messageRecords LoadChatMessageRecords(sqlite3 *db,
+					int64_t chat_id,
+					int64_t limit);
 
 #endif
 

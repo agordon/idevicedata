@@ -28,6 +28,7 @@ using namespace std;
 bool dump_chats = false;
 bool dump_handles = false;
 bool dump_messages = false;
+bool dump_last_messages = false;
 std::string program_name;
 std::string backup_directory;
 
@@ -36,12 +37,14 @@ enum {
 	OPTION_DUMP_CHATS = CHAR_MAX+1,
 	OPTION_DUMP_HANDLES,
 	OPTION_DUMP_MESSAGES,
+	OPTION_DUMP_LAST_MESSAGES,
 };
 const struct option mbdb_options[] = {
 	{"help",	no_argument,	0,	'h'},
 	{"dump-chats",  no_argument,	0,	OPTION_DUMP_CHATS},
 	{"dump-handles",no_argument,	0,	OPTION_DUMP_HANDLES},
 	{"dump-messages",no_argument,	0,	OPTION_DUMP_MESSAGES},
+	{"dump-last-messages",no_argument,0,	OPTION_DUMP_LAST_MESSAGES},
 	{0,		0,		0,	0}
 };
 
@@ -78,6 +81,7 @@ void show_help()
 "  --dump-chats - (debug) dump 'chat' table\n" \
 "  --dump-handles - (debug) dump 'handle' table\n" \
 "  --dump-messages - (debug) dump 'message' table\n" \
+"  --dump-last-messages - (debug) dump the last 'message' for each 'chat'\n" \
 "\n"
 	;
 }
@@ -102,6 +106,9 @@ void parse_command_line(int argc, char* argv[])
 			break;
 		case OPTION_DUMP_MESSAGES:
 			dump_messages = true;
+			break;
+		case OPTION_DUMP_LAST_MESSAGES:
+			dump_last_messages = true;
 			break;
 		default:
 			break;
@@ -135,7 +142,11 @@ int main(int argc, char* argv[])
 	}
 
 	if (dump_messages) {
-		messageRecords h = LoadmessageRecords(db);
+		messageRecords h = LoadAllMessageRecords(db);
+		cout << h;
+	}
+	if (dump_last_messages) {
+		messageRecords h = LoadLastMessageRecords(db);
 		cout << h;
 	}
 
