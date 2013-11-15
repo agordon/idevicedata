@@ -27,6 +27,8 @@ public:
 	std::string account_login;
 	int64_t is_archived;
 	std::string last_addressed_handle;
+	int64_t last_message_id;
+	int64_t messages_count;
 
 public:
 
@@ -35,7 +37,9 @@ public:
 		ROWID(0),
 		style(0),
 		state(0),
-		is_archived(0)
+		is_archived(0),
+		last_message_id(0),
+		messages_count(0)
 	{}
 	virtual ~chatRecord() { }
 };
@@ -57,6 +61,8 @@ inline std::ostream& operator <<(std::ostream& strm, const chatRecord& r)
 		<< "    account_login = \"" << r.account_login << "\"" << std::endl
 		<< "    is_archived = " << r.is_archived << std::endl
 		<< "    last_addressed_handle = \"" << r.last_addressed_handle << "\"" << std::endl
+		<< "    last_message_id = \"" << r.last_message_id << "\"" << std::endl
+		<< "    messages_count = \"" << r.messages_count << "\"" << std::endl
 		<< ")" << std::endl;
 	return strm;
 }
