@@ -29,6 +29,7 @@ bool dump_chats = false;
 bool dump_handles = false;
 bool dump_messages = false;
 bool dump_last_messages = false;
+bool dump_chat_30_messages = false;
 std::string program_name;
 std::string backup_directory;
 
@@ -38,6 +39,7 @@ enum {
 	OPTION_DUMP_HANDLES,
 	OPTION_DUMP_MESSAGES,
 	OPTION_DUMP_LAST_MESSAGES,
+	OPTION_DUMP_CHAT_30_MESSAGES,
 };
 const struct option mbdb_options[] = {
 	{"help",	no_argument,	0,	'h'},
@@ -45,6 +47,7 @@ const struct option mbdb_options[] = {
 	{"dump-handles",no_argument,	0,	OPTION_DUMP_HANDLES},
 	{"dump-messages",no_argument,	0,	OPTION_DUMP_MESSAGES},
 	{"dump-last-messages",no_argument,0,	OPTION_DUMP_LAST_MESSAGES},
+	{"dump-chat-30-messages",no_argument,0,	OPTION_DUMP_CHAT_30_MESSAGES},
 	{0,		0,		0,	0}
 };
 
@@ -82,6 +85,7 @@ void show_help()
 "  --dump-handles - (debug) dump 'handle' table\n" \
 "  --dump-messages - (debug) dump 'message' table\n" \
 "  --dump-last-messages - (debug) dump the last 'message' for each 'chat'\n" \
+"  --dump-chat-30-messages - (debug) dump the last 30 messages for each 'chat'\n" \
 "\n"
 	;
 }
@@ -109,6 +113,9 @@ void parse_command_line(int argc, char* argv[])
 			break;
 		case OPTION_DUMP_LAST_MESSAGES:
 			dump_last_messages = true;
+			break;
+		case OPTION_DUMP_CHAT_30_MESSAGES:
+			dump_chat_30_messages = true;
 			break;
 		default:
 			break;
@@ -148,6 +155,19 @@ int main(int argc, char* argv[])
 	if (dump_last_messages) {
 		messageRecords h = LoadLastMessageRecords(db);
 		cout << h;
+	}
+	if (dump_chat_30_messages) {
+		chatRecords a = LoadchatRecords(db);
+		for (auto chat_itr = a.begin();
+				chat_itr != a.end(); ++chat_itr) {
+			const chatRecord& chat = chat_itr->second;
+			const int64_t chat_id = chat._row_id;
+			messageRecords h = LoadChatMessageRecords(db,
+					chat_id,30);
+
+			cout << chat << endl
+				<< h << endl;
+		}
 	}
 
 	close_iOS_database(&db);

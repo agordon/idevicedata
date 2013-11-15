@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstring>
 #include <err.h>
+#include <sstream>
 #include "idd_common.h"
 #include "MessagesMessageRecord.h"
 #include "MessagesMessageRecordLoader.h"
@@ -80,7 +81,6 @@ messageRecords LoadMessageRecords(sqlite3 *db,
 
 	return data;
 }
-//messageRecords LoadChatMessageRecords(sqlite3 *db,int64_t chat_id);
 
 messageRecords LoadLastMessageRecords(sqlite3 *db)
 {
@@ -186,3 +186,66 @@ messageRecords LoadAllMessageRecords(sqlite3 *db)
 	return LoadMessageRecords(db, query);
 }
 
+messageRecords LoadChatMessageRecords(sqlite3 *db,
+					int64_t chat_id,
+					int64_t limit)
+{
+	std::stringstream query;
+	query <<
+		"Select " \
+		  "message.ROWID, " \
+		  "guid, " \
+		  "text, " \
+		  "replace, " \
+		  "service_center, " \
+		  "handle_id, " \
+		  "subject, " \
+		  "country, " \
+		  "attributedBody, " \
+		  "version, " \
+		  "type, " \
+		  "service, " \
+		  "account, " \
+		  "account_guid, " \
+		  "error, " \
+		  "date, " \
+		  "date_read, " \
+		  "date_delivered, " \
+		  "is_delivered, " \
+		  "is_finished, " \
+		  "is_emote, " \
+		  "is_from_me, " \
+		  "is_empty, " \
+		  "is_delayed, " \
+		  "is_auto_reply, " \
+		  "is_prepared, " \
+		  "is_read, " \
+		  "is_system_message, " \
+		  "is_sent, " \
+		  "has_dd_results, " \
+		  "is_service_message, " \
+		  "is_forward, " \
+		  "was_downgraded, " \
+		  "is_archive, " \
+		  "cache_has_attachments, " \
+		  "cache_roomnames, " \
+		  "was_data_detected, " \
+		  "was_deduplicated " \
+		"FROM " \
+		"  message "
+		"JOIN " \
+		"  (SELECT " \
+		"      message_id" \
+		"   FROM " \
+		"      chat_message_join " \
+		"   WHERE " \
+		"      chat_id = " << chat_id << \
+		"   ORDER BY " \
+		"      message_id DESC ";
+	if (limit>0)
+		query << " LIMIT " << limit ;
+	query <<"    )" \
+		"ON message.ROWID = message_id" ;
+
+	return LoadMessageRecords(db, query.str());
+}

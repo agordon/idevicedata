@@ -41,7 +41,10 @@ messageRecords LoadAllMessageRecords(sqlite3 *db);
 /* Loads the last message of every chat */
 messageRecords LoadLastMessageRecords(sqlite3 *db);
 
-/* Loads All the messages of a specific chat */
+/* Loads All the messages of a specific chat.
+     chat_id = the chat_id to load
+     limit = if ZERO - load all messsages.
+             if NON-ZERO loads the <limit> last messages. */
 messageRecords LoadChatMessageRecords(sqlite3 *db,
 					int64_t chat_id,
 					int64_t limit);
