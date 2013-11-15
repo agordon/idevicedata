@@ -24,6 +24,8 @@ idevicedata_messages_SOURCES = idd_messages.cpp \
 			       MessagesChatRecordLoader.h MessagesChatRecordLoader.cpp \
 			       MessagesHandleRecord.h \
 			       MessagesHandleRecordLoader.h MessagesHandleRecordLoader.cpp \
+			       MessagesMessageRecord.h \
+			       MessagesMessageRecordLoader.h MessagesMessageRecordLoader.cpp \
 			       idd_common.cpp idd_common.h
 
 AM_CPPFLAGS = $(SQLITE3_CFLAGS) $(libcrypto_CFLAGS)
