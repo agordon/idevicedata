@@ -19,12 +19,15 @@
 #include "MessagesChatRecordLoader.h"
 #include "MessagesHandleRecord.h"
 #include "MessagesHandleRecordLoader.h"
+#include "MessagesMessageRecord.h"
+#include "MessagesMessageRecordLoader.h"
 
 using namespace std;
 
 /* Global Variables */
 bool dump_chats = false;
 bool dump_handles = false;
+bool dump_messages = false;
 std::string program_name;
 std::string backup_directory;
 
@@ -32,11 +35,13 @@ std::string backup_directory;
 enum {
 	OPTION_DUMP_CHATS = CHAR_MAX+1,
 	OPTION_DUMP_HANDLES,
+	OPTION_DUMP_MESSAGES,
 };
 const struct option mbdb_options[] = {
 	{"help",	no_argument,	0,	'h'},
 	{"dump-chats",  no_argument,	0,	OPTION_DUMP_CHATS},
 	{"dump-handles",no_argument,	0,	OPTION_DUMP_HANDLES},
+	{"dump-messages",no_argument,	0,	OPTION_DUMP_MESSAGES},
 	{0,		0,		0,	0}
 };
 
@@ -72,6 +77,7 @@ void show_help()
 "  --help    -  Show this help screen.\n" \
 "  --dump-chats - (debug) dump 'chat' table\n" \
 "  --dump-handles - (debug) dump 'handle' table\n" \
+"  --dump-messages - (debug) dump 'message' table\n" \
 "\n"
 	;
 }
@@ -93,6 +99,9 @@ void parse_command_line(int argc, char* argv[])
 			break;
 		case OPTION_DUMP_HANDLES:
 			dump_handles = true;
+			break;
+		case OPTION_DUMP_MESSAGES:
+			dump_messages = true;
 			break;
 		default:
 			break;
@@ -122,6 +131,11 @@ int main(int argc, char* argv[])
 
 	if (dump_handles) {
 		handleRecords h = LoadhandleRecords(db);
+		cout << h;
+	}
+
+	if (dump_messages) {
+		messageRecords h = LoadmessageRecords(db);
 		cout << h;
 	}
 
