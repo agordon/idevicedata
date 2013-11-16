@@ -9,7 +9,7 @@
 #include <iostream>
 #include <err.h>
 #include "idd_common.h"
-#include "AddressBookDatabase.h"
+#include "Database.h"
 
 using namespace std;
 

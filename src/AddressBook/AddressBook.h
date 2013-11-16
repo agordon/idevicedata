@@ -4,8 +4,8 @@
 #ifndef _IOS_ADDRESSBOOK_H__
 #define _IOS_ADDRESSBOOK_H__
 
-#include "AddressBookDatabase.h"
-#include "AddressBookMemory.h"
+#include "Database.h"
+#include "Memory.h"
 
 class AddressBook
 {

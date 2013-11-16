@@ -15,8 +15,8 @@
 
 #include "common/idd_common.h"
 #include "AddressBook/AddressBook.h"
-#include "AddressBook/AddressBookExportHTML.h"
-#include "AddressBook/AddressBookExportSummary.h"
+#include "AddressBook/ExportHTML.h"
+#include "AddressBook/ExportSummary.h"
 
 using namespace std;
 

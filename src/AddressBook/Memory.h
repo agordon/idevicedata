@@ -9,7 +9,7 @@
 #include <vector>
 #include <ostream>
 
-#include "AddressBookDatabase.h"
+#include "Database.h"
 
 /* A "single-value" contact information record:
    email, phone number, website */

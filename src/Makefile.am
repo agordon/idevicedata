@@ -12,11 +12,11 @@ bin_PROGRAMS = idevicedata_addressbook \
 		idevicedata_messages
 
 idevicedata_addressbook_SOURCES = idd_addressbook.cpp \
-				  AddressBook/AddressBookDatabase.h AddressBook/AddressBookDatabase.cpp \
-				  AddressBook/AddressBookMemory.h AddressBook/AddressBookMemory.cpp \
+				  AddressBook/Database.h AddressBook/Database.cpp \
+				  AddressBook/Memory.h AddressBook/Memory.cpp \
+				  AddressBook/ExportHTML.h AddressBook/ExportHTML.cpp \
+				  AddressBook/ExportSummary.h AddressBook/ExportSummary.cpp \
 				  AddressBook/AddressBook.h AddressBook/AddressBook.cpp \
-				  AddressBook/AddressBookExportHTML.h AddressBook/AddressBookExportHTML.cpp \
-				  AddressBook/AddressBookExportSummary.h AddressBook/AddressBookExportSummary.cpp \
 				  common/idd_common.cpp common/idd_common.h
 
 idevicedata_messages_SOURCES = idd_messages.cpp \
