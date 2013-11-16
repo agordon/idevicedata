@@ -30,10 +30,8 @@ AC_PROG_CPP
 AC_PROG_CXX
 
 AX_C_LONG_LONG
-AX_CXX_HEADER_STDCXX_TR1
-if test "$ax_cv_cxx_stdcxx_tr1" != yes; then
-	            AC_MSG_ERROR([Your version of gcc does not support the 'std::tr1' standard. Recommended gcc version is 4.1.2 or later. Please use a newer gcc version.])
-fi
+AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
+
 
 dnl === Enable this if you need a boost
 dnl BOOST_REQUIRE
