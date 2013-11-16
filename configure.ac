@@ -12,7 +12,7 @@ AC_INIT([idevicedata],
         m4_esyscmd([config/git-version-gen .tarball-version]),
         [A. Gordon assafgordon@gmail.com])
 
-AC_CONFIG_SRCDIR([src/idd_common.cpp])
+AC_CONFIG_SRCDIR([src/idd_addressbook.cpp])
 
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)

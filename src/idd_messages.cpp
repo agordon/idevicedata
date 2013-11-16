@@ -13,14 +13,14 @@
 
 #include <sqlite3.h>
 
-#include "idd_common.h"
+#include "common/idd_common.h"
 
-#include "MessagesChatRecord.h"
-#include "MessagesChatRecordLoader.h"
-#include "MessagesHandleRecord.h"
-#include "MessagesHandleRecordLoader.h"
-#include "MessagesMessageRecord.h"
-#include "MessagesMessageRecordLoader.h"
+#include "Messages/MessagesChatRecord.h"
+#include "Messages/MessagesChatRecordLoader.h"
+#include "Messages/MessagesHandleRecord.h"
+#include "Messages/MessagesHandleRecordLoader.h"
+#include "Messages/MessagesMessageRecord.h"
+#include "Messages/MessagesMessageRecordLoader.h"
 
 using namespace std;
 

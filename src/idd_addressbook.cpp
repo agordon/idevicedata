@@ -13,10 +13,10 @@
 
 #include <sqlite3.h>
 
-#include "idd_common.h"
-#include "AddressBook.h"
-#include "AddressBookExportHTML.h"
-#include "AddressBookExportSummary.h"
+#include "common/idd_common.h"
+#include "AddressBook/AddressBook.h"
+#include "AddressBook/AddressBookExportHTML.h"
+#include "AddressBook/AddressBookExportSummary.h"
 
 using namespace std;
 

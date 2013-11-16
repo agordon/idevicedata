@@ -12,23 +12,24 @@ bin_PROGRAMS = idevicedata_addressbook \
 		idevicedata_messages
 
 idevicedata_addressbook_SOURCES = idd_addressbook.cpp \
-				  AddressBookDatabase.h AddressBookDatabase.cpp \
-				  AddressBookMemory.h AddressBookMemory.cpp \
-				  AddressBook.h AddressBook.cpp \
-				  AddressBookExportHTML.h AddressBookExportHTML.cpp \
-				  AddressBookExportSummary.h AddressBookExportSummary.cpp \
-				  idd_common.cpp idd_common.h
+				  AddressBook/AddressBookDatabase.h AddressBook/AddressBookDatabase.cpp \
+				  AddressBook/AddressBookMemory.h AddressBook/AddressBookMemory.cpp \
+				  AddressBook/AddressBook.h AddressBook/AddressBook.cpp \
+				  AddressBook/AddressBookExportHTML.h AddressBook/AddressBookExportHTML.cpp \
+				  AddressBook/AddressBookExportSummary.h AddressBook/AddressBookExportSummary.cpp \
+				  common/idd_common.cpp common/idd_common.h
 
 idevicedata_messages_SOURCES = idd_messages.cpp \
-			       MessagesChatRecord.h \
-			       MessagesChatRecordLoader.h MessagesChatRecordLoader.cpp \
-			       MessagesHandleRecord.h \
-			       MessagesHandleRecordLoader.h MessagesHandleRecordLoader.cpp \
-			       MessagesMessageRecord.h \
-			       MessagesMessageRecordLoader.h MessagesMessageRecordLoader.cpp \
-			       idd_common.cpp idd_common.h
+			       Messages/MessagesChatRecord.h \
+			       Messages/MessagesChatRecordLoader.h Messages/MessagesChatRecordLoader.cpp \
+			       Messages/MessagesHandleRecord.h \
+			       Messages/MessagesHandleRecordLoader.h Messages/MessagesHandleRecordLoader.cpp \
+			       Messages/MessagesMessageRecord.h \
+			       Messages/MessagesMessageRecordLoader.h Messages/MessagesMessageRecordLoader.cpp \
+			       common/idd_common.cpp common/idd_common.h
 
-AM_CPPFLAGS = $(SQLITE3_CFLAGS) $(libcrypto_CFLAGS)
+AUTOMAKE_OPTIONS = subdir-objects
+AM_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/src/common $(SQLITE3_CFLAGS) $(libcrypto_CFLAGS)
 AM_LDFLAGS = $(SQLITE3_LDFLAGS) $(libcrypto_LIBS)
 
 ## Add the following if you need a boost

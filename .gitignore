@@ -23,8 +23,8 @@ config.status
 configure
 libtool
 
-
-*/.deps/*
+.dirstamp
+.deps
 
 config/compile
 config/test-driver
@@ -46,6 +46,7 @@ stamp-h1
 
 src/idevicedata_addressbook
 src/idevicedata_messages
+
 
 
 ## TODO: change this to the name of your unit-test programs
