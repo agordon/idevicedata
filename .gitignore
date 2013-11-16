@@ -46,7 +46,7 @@ stamp-h1
 
 src/idevicedata_addressbook
 src/idevicedata_messages
-
+src/idevicedata_photos
 
 
 ## TODO: change this to the name of your unit-test programs

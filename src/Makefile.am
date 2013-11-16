@@ -9,6 +9,7 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 bin_PROGRAMS = idevicedata_addressbook \
+	       idevicedata_photos \
 		idevicedata_messages
 
 idevicedata_addressbook_SOURCES = idd_addressbook.cpp \
@@ -26,6 +27,11 @@ idevicedata_messages_SOURCES = idd_messages.cpp \
 			       Messages/HandleRecordLoader.h Messages/HandleRecordLoader.cpp \
 			       Messages/MessageRecord.h \
 			       Messages/MessageRecordLoader.h Messages/MessageRecordLoader.cpp \
+			       common/idd_common.cpp common/idd_common.h
+
+idevicedata_photos_SOURCES = idd_photos.cpp \
+			       Photos/GenericAssetRecord.h \
+			       Photos/GenericAssetRecordLoader.h Photos/GenericAssetRecordLoader.cpp \
 			       common/idd_common.cpp common/idd_common.h
 
 AUTOMAKE_OPTIONS = subdir-objects
