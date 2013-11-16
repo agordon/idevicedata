@@ -4,8 +4,8 @@
 #include <err.h>
 #include <sstream>
 #include "idd_common.h"
-#include "MessagesMessageRecord.h"
-#include "MessagesMessageRecordLoader.h"
+#include "MessageRecord.h"
+#include "MessageRecordLoader.h"
 
 using namespace std;
 

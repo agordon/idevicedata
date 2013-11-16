@@ -4,7 +4,7 @@
 #ifndef __message_Record_Loader_H__
 #define __message_Record_Loader_H__
 
-#include "MessagesMessageRecord.h"
+#include "MessageRecord.h"
 
 #include <unordered_map>
 #include <ostream>

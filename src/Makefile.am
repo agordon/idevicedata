@@ -20,12 +20,12 @@ idevicedata_addressbook_SOURCES = idd_addressbook.cpp \
 				  common/idd_common.cpp common/idd_common.h
 
 idevicedata_messages_SOURCES = idd_messages.cpp \
-			       Messages/MessagesChatRecord.h \
-			       Messages/MessagesChatRecordLoader.h Messages/MessagesChatRecordLoader.cpp \
-			       Messages/MessagesHandleRecord.h \
-			       Messages/MessagesHandleRecordLoader.h Messages/MessagesHandleRecordLoader.cpp \
-			       Messages/MessagesMessageRecord.h \
-			       Messages/MessagesMessageRecordLoader.h Messages/MessagesMessageRecordLoader.cpp \
+			       Messages/ChatRecord.h \
+			       Messages/ChatRecordLoader.h Messages/ChatRecordLoader.cpp \
+			       Messages/HandleRecord.h \
+			       Messages/HandleRecordLoader.h Messages/HandleRecordLoader.cpp \
+			       Messages/MessageRecord.h \
+			       Messages/MessageRecordLoader.h Messages/MessageRecordLoader.cpp \
 			       common/idd_common.cpp common/idd_common.h
 
 AUTOMAKE_OPTIONS = subdir-objects

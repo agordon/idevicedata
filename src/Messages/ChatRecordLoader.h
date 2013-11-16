@@ -4,7 +4,7 @@
 #ifndef __chat_Record_Loader_H__
 #define __chat_Record_Loader_H__
 
-#include "MessagesChatRecord.h"
+#include "ChatRecord.h"
 
 #include <unordered_map>
 #include <algorithm>

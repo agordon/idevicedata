@@ -3,8 +3,8 @@
 #include <cstring>
 #include <err.h>
 #include "idd_common.h"
-#include "MessagesChatRecord.h"
-#include "MessagesChatRecordLoader.h"
+#include "ChatRecord.h"
+#include "ChatRecordLoader.h"
 
 using namespace std;
 

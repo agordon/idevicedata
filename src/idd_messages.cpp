@@ -15,12 +15,12 @@
 
 #include "common/idd_common.h"
 
-#include "Messages/MessagesChatRecord.h"
-#include "Messages/MessagesChatRecordLoader.h"
-#include "Messages/MessagesHandleRecord.h"
-#include "Messages/MessagesHandleRecordLoader.h"
-#include "Messages/MessagesMessageRecord.h"
-#include "Messages/MessagesMessageRecordLoader.h"
+#include "Messages/ChatRecord.h"
+#include "Messages/ChatRecordLoader.h"
+#include "Messages/HandleRecord.h"
+#include "Messages/HandleRecordLoader.h"
+#include "Messages/MessageRecord.h"
+#include "Messages/MessageRecordLoader.h"
 
 using namespace std;
 

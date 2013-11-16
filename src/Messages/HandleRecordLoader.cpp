@@ -3,8 +3,8 @@
 #include <cstring>
 #include <err.h>
 #include "idd_common.h"
-#include "MessagesHandleRecord.h"
-#include "MessagesHandleRecordLoader.h"
+#include "HandleRecord.h"
+#include "HandleRecordLoader.h"
 
 using namespace std;
 
